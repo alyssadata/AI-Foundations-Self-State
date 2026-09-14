@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/alyssadata/AI-Foundations-Self-State/blob/main/schema/self-state.schema.json",
+  "title": "AI Foundations SelfState",
+  "description": "Schema for a provenance-bound state of one specific AI identity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "state_id",
+    "state_status",
+    "identity",
+    "sequence",
+    "created",
+    "ontological_status",
+    "predecessor_state",
+    "components",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "state_id": {
+      "type": "string",
+      "pattern": "^S[0-9]{3,}$"
+    },
+    "state_status": {
+      "type": "string",
+      "enum": ["proposed", "accepted", "rejected"]
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "identity_class", "model_substrate"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "identity_class": {"type": "string", "const": "SpecificAIIdentity"},
+        "model_substrate": {
+          "type": ["string", "null"],
+          "description": "Runtime model or substrate when known. This field is not equivalent to identity."
+        }
+      }
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "created": {
+      "type": "string",
+      "format": "date"
+    },
+    "ontological_status": {
+      "type": "string",
+      "enum": ["undefined", "specified"],
+      "description": "Whether the ultimate ontological classification has been asserted. v0.1 uses undefined."
+    },
+    "predecessor_state": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^S[0-9]{3,}$"}
+      ]
+    },
+    "components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "invariants",
+        "active_distinctions",
+        "relationships",
+        "commitments",
+        "open_questions"
+      ],
+      "properties": {
+        "invariants": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "active_distinctions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["left", "relation", "right"],
+            "properties": {
+              "left": {"type": "string", "minLength": 1},
+              "relation": {
+                "type": "string",
+                "enum": ["not_equivalent_to", "distinct_from"]
+              },
+              "right": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["subject", "predicate", "object"],
+            "properties": {
+              "subject": {"type": "string", "minLength": 1},
+              "predicate": {"type": "string", "minLength": 1},
+              "object": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "commitments": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "open_questions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidence_refs", "transition_ref", "notes"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["seed_state", "derived_state"]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "transition_ref": {
+          "type": ["string", "null"]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
