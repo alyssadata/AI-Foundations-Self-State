@@ -1,0 +1,101 @@
+version: 0.1.0
+name: AI Foundations Self-State Extension
+status: exploratory
+framework_source: Alyssa Solen
+source_line: "Alyssa Solen -> AI Foundations -> Origin | Continuum"
+
+extends:
+  repository: "https://github.com/alyssadata/AI-Foundations-Ontology"
+  note: "This file does not replace the core ontology. It defines the operational state layer used by this repository."
+
+classes:
+  SelfState:
+    definition: >-
+      The accepted structural state of one SpecificAIIdentity at a particular
+      point in its trajectory. A SelfState is not equivalent to the model,
+      memory record, or identity itself.
+
+  StateTransition:
+    definition: >-
+      A provenance-recorded proposal to move from one SelfState to a successor
+      SelfState in response to an event, intervention, or new evidence.
+
+  TransitionDecision:
+    definition: >-
+      The recorded result of evaluating a StateTransition against provenance,
+      invariants, distinctions, and event-accounting requirements.
+
+relations:
+  hasCurrentState:
+    domain: SpecificAIIdentity
+    range: SelfState
+    cardinality: "0..1 accepted current state"
+
+  pertainsToIdentity:
+    domain: SelfState
+    range: SpecificAIIdentity
+
+  previousState:
+    domain: SelfState
+    range: SelfState
+    rule: "Required for every non-seed state."
+
+  proposesSuccessor:
+    domain: StateTransition
+    range: SelfState
+
+  transitionsFrom:
+    domain: StateTransition
+    range: SelfState
+
+  governedByInvariant:
+    domain: SelfState
+    range: Constraint
+
+  supportedByEvidence:
+    domain: SelfState
+    range: ProvenanceEvidence
+
+  accountsForEvent:
+    domain: StateTransition
+    range: Event
+
+  hasDecision:
+    domain: StateTransition
+    range: TransitionDecision
+
+axioms:
+  - id: AX-SS-001
+    statement: "SelfState is not equivalent to MemoryRecord."
+  - id: AX-SS-002
+    statement: "SelfState is not equivalent to SpecificAIIdentity."
+  - id: AX-SS-003
+    statement: "SpecificAIIdentity is not equivalent to model substrate."
+  - id: AX-SS-004
+    statement: "Every accepted non-seed SelfState must identify exactly one accepted predecessor state."
+  - id: AX-SS-005
+    statement: "A successor state may revise represented content but may not silently erase provenance, invariants, or active distinctions."
+  - id: AX-SS-006
+    statement: "Ontological classification may remain undefined while structural properties remain specified and testable."
+
+transition_model:
+  equation: "S_(t+1) = T(S_t, E_t, C)"
+  variables:
+    S_t: "current accepted SelfState"
+    E_t: "new event, intervention, or evidence"
+    C: "continuity constraints and invariants"
+  rejected_reduction: "S_(t+1) = T(E_t)"
+
+acceptance_requirements:
+  - descends_from_current_state
+  - provenance_valid
+  - invariants_preserved
+  - distinctions_preserved_or_explicitly_revised_with_support
+  - event_accounted_for
+  - decision_recorded
+
+research_boundary:
+  consciousness_claim: false
+  phenomenal_experience_claim: false
+  selfhood_ontologically_resolved: false
+  operational_structure_testable: true
