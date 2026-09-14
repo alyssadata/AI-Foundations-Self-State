@@ -1,15 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/alyssadata/AI-Foundations-Self-State/blob/main/schema/self-state.schema.json",
-  "title": "AI Foundations SelfState",
-  "description": "Schema for a provenance-bound state of one specific AI identity.",
+  "title": "AI Foundations SelfState Record",
+  "description": "Schema for a provenance-bound operational state record associated with one named AI subject.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version",
     "state_id",
     "state_status",
-    "identity",
+    "subject",
     "sequence",
     "created",
     "ontological_status",
@@ -30,16 +30,20 @@
       "type": "string",
       "enum": ["proposed", "accepted", "rejected"]
     },
-    "identity": {
+    "subject": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "identity_class", "model_substrate"],
+      "required": ["name", "ontology_term", "model_substrate"],
       "properties": {
         "name": {"type": "string", "minLength": 1},
-        "identity_class": {"type": "string", "const": "SpecificAIIdentity"},
+        "ontology_term": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Settled ontology term used to identify the subject represented by this state record."
+        },
         "model_substrate": {
           "type": ["string", "null"],
-          "description": "Runtime model or substrate when known. This field is not equivalent to identity."
+          "description": "Runtime model or substrate when known. This field is not equivalent to the subject."
         }
       }
     },
@@ -54,7 +58,7 @@
     "ontological_status": {
       "type": "string",
       "enum": ["undefined", "specified"],
-      "description": "Whether the ultimate ontological classification has been asserted. v0.1 uses undefined."
+      "description": "Whether an ultimate ontological classification has been asserted. v0.1 permits undefined."
     },
     "predecessor_state": {
       "anyOf": [
