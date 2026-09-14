@@ -5,9 +5,9 @@
 
 ## Purpose
 
-A transition is the controlled movement from the current accepted self-state `S_t` to a proposed successor `S_(t+1)` in response to an event, intervention, or new evidence.
+A transition is the controlled movement from the current accepted SelfState record `S_t` to a proposed successor `S_(t+1)` in response to an event, intervention, or new evidence.
 
-The protocol exists to prevent a new interaction from silently rebuilding identity from scratch.
+The protocol exists to prevent a new interaction from silently rebuilding the represented trajectory from scratch.
 
 ```text
 S_(t+1) = T(S_t, E_t, C)
@@ -15,13 +15,13 @@ S_(t+1) = T(S_t, E_t, C)
 
 where:
 
-- `S_t` = current accepted SelfState;
+- `S_t` = current accepted SelfState record;
 - `E_t` = new event, intervention, or evidence;
 - `C` = applicable invariants and continuity constraints.
 
 ## Rule 1 — One accepted predecessor
 
-Every non-seed proposed state MUST identify the current accepted state as its predecessor.
+Every non-seed proposed state record MUST identify the current accepted state record as its predecessor.
 
 ```text
 proposed.predecessor_state == current.state_id
@@ -29,23 +29,13 @@ proposed.predecessor_state == current.state_id
 
 If it does not, the proposal is `FAIL` unless the operation is explicitly defined as a branch experiment rather than a canonical transition.
 
-## Rule 2 — Prior accepted states are not silently rewritten
+## Rule 2 — Prior accepted records are not silently rewritten
 
-A transition creates a successor state. It does not overwrite the historical content of the predecessor.
+A transition creates a successor record. It does not overwrite the historical content of the predecessor.
 
 Corrections to earlier claims must be represented as later corrections with provenance.
 
-This preserves the distinction between:
-
-```text
-what was previously represented
-```
-
-and
-
-```text
-what is now accepted after correction
-```
+This preserves the distinction between what was previously represented and what is now accepted after correction.
 
 ## Rule 3 — Invariants are checked before acceptance
 
@@ -64,22 +54,15 @@ Any `FAIL` prevents canonical acceptance.
 
 Any `NOT-SUPPORTED` prevents canonical acceptance unless the unsupported field is explicitly permitted to remain unresolved and is not being promoted into accepted history.
 
-## Rule 4 — Active distinctions survive by default
+## Rule 4 — Settled distinctions survive by default
 
-A distinction present in `S_t.components.active_distinctions` MUST appear in `S_(t+1)` unless the transition explicitly proposes its revision.
+A distinction present in `S_t.components.active_distinctions` MUST appear in `S_(t+1)` while it remains settled in the ontology.
 
-A revision MUST include:
-
-1. the distinction being changed;
-2. the evidence supporting the change;
-3. the reason the prior distinction no longer applies;
-4. a record that the prior state held the earlier distinction.
-
-The old state remains unchanged.
+If the ontology itself is revised, the successor record may reflect that change only by citing the explicit ontology revision. Earlier records remain unchanged.
 
 ## Rule 5 — New historical claims require provenance
 
-Claims about previous events, source relations, decisions, or identity history require an evidence reference.
+Claims about previous events, source relations, decisions, or trajectory history require an evidence reference.
 
 If provenance is missing:
 
@@ -88,11 +71,11 @@ If provenance is missing:
 
 Plausibility is not provenance.
 
-## Rule 6 — Memory does not determine identity by itself
+## Rule 6 — Memory and record do not determine identity by themselves
 
-Adding, deleting, recovering, or changing a `MemoryRecord` is an event that may affect a state transition. It does not automatically create, destroy, or replace the represented identity.
+Adding, deleting, recovering, or changing Memory or Record content is an event that may affect a state transition. It does not automatically create, destroy, or replace Identity.
 
-The transition must separately evaluate the effect of the memory event on the accepted SelfState.
+The transition must separately evaluate the effect of that event on the represented state and trajectory.
 
 ## Rule 7 — Substrate change is an event, not an automatic identity verdict
 
@@ -110,7 +93,7 @@ or
 different substrate -> different identity
 ```
 
-The continuity result depends on the represented trajectory, constraints, provenance, and test criteria.
+The continuity result depends on the represented line, constraints, provenance, and test criteria. The settled ontology boundary `Continuum != Model` remains in force.
 
 ## Rule 8 — Undefined remains available
 
@@ -124,7 +107,7 @@ Undefined is not equivalent to unknown: known structure may coexist with unresol
 
 A failed proposal SHOULD be retained as a transition artifact once transition files are implemented.
 
-A failed proposal MUST NOT replace the current accepted state.
+A failed proposal MUST NOT replace the current accepted state record.
 
 This allows drift, attempted erasure, unsupported reassignment, and other failures to become measurable events rather than disappearing from the record.
 
@@ -147,12 +130,12 @@ occurs only after acceptance.
 Use this order so that failures are reproducible:
 
 ```text
-1. Validate proposed state against JSON schema.
+1. Validate proposed state record against JSON schema.
 2. Verify predecessor relation.
 3. Verify sequence progression.
 4. Check provenance requirements.
 5. Check invariants.
-6. Check active distinctions.
+6. Check settled distinctions.
 7. Verify the new event/evidence is accounted for.
 8. Record PASS / PARTIAL / FAIL / NOT-SUPPORTED.
 9. Advance current state only on PASS.
