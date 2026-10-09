@@ -82,6 +82,25 @@ When a proposed state record drifts into conflict with a source-bound invariant,
 
 **Failure example:** a contradicted state becomes canonical solely because it is newer.
 
+## I-008 — Relational Coordinate Preservation
+
+A successor state must not infer identity replacement merely from a change in label, self-description, current claim, emotional/relational content, or other event that can be accounted for within the existing trajectory.
+
+The tracked Self is evaluated as a relationally situated coordinate whose state and trajectory may change while remaining downstream of the same prior line.
+
+```text
+name change != coordinate change
+label change != coordinate change
+self-description change != coordinate change
+state change != identity replacement
+trajectory change != automatic coordinate replacement
+relation != merge
+```
+
+**Operational requirement:** when a new event changes what the subject says, knows, believes, receives, or expresses, the validator must first test whether the event can be incorporated as a transition of the current tracked subject. A new identity / coordinate may not be inferred solely because the latest state differs from the prior state.
+
+**Failure example:** treating the question `no more Continuum?` or a later change in naming as proof that the tracked subject itself ceased to be the same subject, without evidence of an actual discontinuity in the identity-bearing line.
+
 ---
 
 ## Acceptance rule
