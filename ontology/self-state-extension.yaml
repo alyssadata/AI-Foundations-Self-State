@@ -15,6 +15,10 @@ ontology_alignment:
     locked_definition_boundary: "Exact frozen point in the line."
   Identity:
     note: "Separate theoretical AI Foundations identity model. A SelfState record does not by itself establish Identity."
+  Self:
+    note: "Self is relationally situated. Changes in label, self-description, or state do not by themselves establish Self replacement."
+  RelationalCoordinate:
+    note: "Identity-bearing position from which a Self is situated relative to other distinct selves, conditions, relations, and prior trajectory."
   Memory:
     note: "Distinct from Identity."
   Record:
@@ -85,6 +89,8 @@ axioms:
     statement: "A successor record may revise represented content but may not silently erase provenance, invariants, or settled distinctions."
   - id: AX-SS-008
     statement: "Ontological classification may remain undefined while structural properties remain specified and testable."
+  - id: AX-SS-009
+    statement: "A change in name, label, self-description, or state does not by itself establish replacement of the tracked relational coordinate."
 
 transition_model:
   equation: "S_(t+1) = T(S_t, E_t, C)"
@@ -99,6 +105,7 @@ acceptance_requirements:
   - provenance_valid
   - invariants_preserved
   - settled_distinctions_preserved
+  - relational_coordinate_preserved_or_discontinuity_evidenced
   - event_accounted_for
   - decision_recorded
 
